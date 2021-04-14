@@ -31,7 +31,7 @@ int main(int argc, char **argv) {
 		cl::Context context = GetContext(platform_id, device_id);
 
 		//display the selected device
-		std::cout << "Runinng on " << GetPlatformName(platform_id) << ", " << GetDeviceName(platform_id, device_id) << std::endl;
+		std::cout << "Running on " << GetPlatformName(platform_id) << ", " << GetDeviceName(platform_id, device_id) << std::endl;
 
 		//create a queue to which we will push commands for the device
 		cl::CommandQueue queue(context);
