@@ -20,8 +20,37 @@ kernel void mult_add(global const int* A, global const int* B, global int* C) {
 
 //a simple smoothing kernel averaging values in a local window (radius 1)
 kernel void avg_filter(global const int* A, global int* B) {
-	int id = get_global_id(0);
-	B[id] = (A[id - 1] + A[id] + A[id + 1]) / 3;
+	int gid = get_global_id(0);
+	int id = get_local_id(0);
+	int local_size = get_local_size(0);
+	printf("id = %d. gid = %d. local size = %d\n", id, gid, local_size);
+
+	//for (int i = 0; i <= local_size; i++) {
+		//printf("i = %d", i);
+	if (id == 0) {
+		printf("left bound con at i = % d\n", id);
+		B[gid] = (A[local_size - 1] + A[id] + A[id + 1]) / 3;
+	}
+	else if (id == local_size-1) {
+		printf("right bound con at i = % d\n", id);
+		B[gid] = (A[id - 1] + A[id] + A[id - local_size]) / 3;
+	}
+	else {
+
+		B[gid] = (A[id - 1] + A[id] + A[id + 1]) / 3;
+
+	}
+		//barrier(CLK_GLOBAL_MEM_FENCE);
+
+	//}
+	//B[id] = (A[id - 1] + A[id] + A[id + 1]) / 3;
+	/*
+	ans:
+	A = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+	C = [0, 1, 2, 3, 4, 5, 6, 7, 8, 5]
+	Res:
+	C = [3, 1, 2, 3, 4, 5, 6, 7, 8, 5]
+	*/
 }
 
 //a simple 2D kernel

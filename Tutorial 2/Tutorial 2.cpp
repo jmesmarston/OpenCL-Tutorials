@@ -82,10 +82,14 @@ int main(int argc, char **argv) {
 //		queue.enqueueWriteBuffer(dev_convolution_mask, CL_TRUE, 0, convolution_mask.size()*sizeof(float), &convolution_mask[0]);
 
 		//4.2 Setup and execute the kernel (i.e. device code)
-		cl::Kernel kernel = cl::Kernel(program, "identity");
+		cl::Kernel kernel = cl::Kernel(program, "avg_filter");
 		kernel.setArg(0, dev_image_input);
 		kernel.setArg(1, dev_image_output);
 //		kernel.setArg(2, dev_convolution_mask);
+
+		cl::Device device = context.getInfo<CL_CONTEXT_DEVICES>()[0]; // get device
+		std::cerr << "This value is the smallest work group size suggested : " << kernel.getWorkGroupInfo<CL_KERNEL_PREFERRED_WORK_GROUP_SIZE_MULTIPLE>(device) << endl; // This value is the smallest work group size suggested
+		std::cerr << "This value is the largest work group size suggested : " << kernel.getWorkGroupInfo<CL_KERNEL_WORK_GROUP_SIZE>(device) << endl; // This value is the largest work group size suggested
 
 		queue.enqueueNDRangeKernel(kernel, cl::NullRange, cl::NDRange(image_input.size()), cl::NullRange);
 

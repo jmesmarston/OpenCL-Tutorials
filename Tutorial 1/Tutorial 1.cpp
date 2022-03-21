@@ -56,7 +56,7 @@ int main(int argc, char** argv) {
 
 		//Part 3 - memory allocation
 		//host - input
-		std::vector<int> A = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }; //C++11 allows this type of initialisation
+		std::vector<int> A = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 10 }; //C++11 allows this type of initialisation
 		std::vector<int> B = { 0, 1, 2, 0, 1, 2, 0, 1, 2, 0 };
 		//std::vector<int> A(100000000);
 		//std::vector<int> B(100000000);
@@ -101,10 +101,10 @@ int main(int argc, char** argv) {
 		kernel_mult.setArg(1, buffer_B);
 		kernel_mult.setArg(2, buffer_C);
 
-		cl::Kernel kernel_mult_add = cl::Kernel(program, "mult_add");
+		cl::Kernel kernel_mult_add = cl::Kernel(program, "avg_filter");
 		kernel_mult_add.setArg(0, buffer_A);
-		kernel_mult_add.setArg(1, buffer_B);
-		kernel_mult_add.setArg(2, buffer_C);
+		//kernel_mult_add.setArg(1, buffer_B);
+		kernel_mult_add.setArg(1, buffer_C);
 
 		//clGetDeviceInfo(CL_DEVICE_MAX_CONSTANT_BUFFER_SIZE)
 
@@ -120,7 +120,7 @@ int main(int argc, char** argv) {
 		queue.enqueueReadBuffer(buffer_C, CL_TRUE, 0, vector_size, &C[0]);
 
 		std::cout << "A = " << A << std::endl;
-		std::cout << "B = " << B << std::endl;
+		//std::cout << "B = " << B << std::endl;
 		std::cout << "C = " << C << std::endl;
 		//std::cout << "Kernel execution time [ns]:" <<
 		//	prof_event.getProfilingInfo<CL_PROFILING_COMMAND_END>() -
